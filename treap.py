@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# Randomized Treap Data Structure
+# Expected O(log n) add, delete, lookup
+# Based on Kozen Chapter 13 (https://www.cs.cmu.edu/afs/cs/academic/class/15750-s19/Handouts/Kozen/KozenLecture13.pdf)
+
 import random
 DEBUG = True
 LEN = 1000
