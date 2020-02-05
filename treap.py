@@ -2,6 +2,7 @@
 
 import random
 DEBUG = True
+LEN = 1000
 
 # TODO - not generic, just works for numbers
 class TreapNode:
@@ -26,6 +27,7 @@ class TreapNode:
     def checker(self):
         if DEBUG:
             # ensures the in order properties of the entire tree
+            # and max-heap properties
             if (self.left):
                 assert(self.left.data < self.data)
                 assert(self.left.priority < self.priority)
@@ -112,8 +114,6 @@ class TreapNode:
         self.left = b
         if b:
             b.parent = self
-        if (curr_parent):
-            curr_parent.checker()
     
     # rotates the parent for add
     def rotate_parent(self):
@@ -178,7 +178,13 @@ class TreapNode:
                 has_rooted = False
                 # actually delete the thing
                 while not (curr.left == None and curr.right == None):
-                    if (curr.right):
+                    if (curr.right and curr.left):
+                        # pick the one with the highest priority
+                        if (curr.right.priority > curr.left.priority):
+                            curr.__rotate_left()
+                        else:
+                            curr.__rotate_right()
+                    elif curr.right:
                         curr.__rotate_left()
                     else:
                         curr.__rotate_right()
@@ -187,7 +193,9 @@ class TreapNode:
                         has_rooted = True
                     curr.checker()
                 # i am a leaf, just kill me
+                parent = curr.parent
                 curr.parent.__replace_child(curr, None)
+                parent.checker()
                 return root
             else:
                 if curr.data > data and curr.left:
@@ -212,7 +220,7 @@ class TreapNode:
 
     
 if __name__=="__main__":
-    test = range(1000)
+    test = range(LEN)
     #random.shuffle(test)
     
     root = TreapNode(test[0], None)
@@ -226,17 +234,13 @@ if __name__=="__main__":
         assert(root.lookup(i))
         root.checker()
 
-    print (root.height())
+    print(root.height())
 
     random.shuffle(test)
 
-    for i in test[:99]:
-        #print("Deleting %d" % i)
+    for i in test[:LEN - 1]:
         root = root.delete(i)
         root.checker()
-
-
-    print(root.height())
 
     print("[+] All tests passed")
         
